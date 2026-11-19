@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -15,22 +14,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
-    ListView listView;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null ){
+        if(actionBar != null){
             actionBar.setDisplayShowHomeEnabled(true);
-            actionBar setLogo = setLogo(R.mipmap.ic_launcher);
+            actionBar.setLogo(R.mipmap.ic_launcher);
             actionBar.setDisplayUseLogoEnabled(true);
-
         }
-
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -38,31 +35,25 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        String[] attraction = new String[]{"Art Institute of Chicago", "Magnificent Mile", "Wills Tower", "Chicago Bean", "Water Tower"};
-
-
-        listView = findViewById(R.id.ListView);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-               this,
-               android.R.layout.simple_list_item_1,
-               android.R.id.text1,
-               attraction
-        );
-    listView.setAdapter(adapter);
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            switch (position){
+        String[] attractions = new String[]{
+                "Art Institute of Chicago",
+                "Magnificent Mile",
+                "Willis Tower",
+                "Chicago Bean",
+                "Water Tower"
+        };
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.setAdapter(new AttractionAdapter(attractions, position -> {
+            switch(position){
                 case 0:
-                 startActivity(new Intent(
-                         Intent.ACTION_VIEW,
-                         Uri.parse("http://artic.edu")
-                 ));
-
+                    startActivity(new Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("http://artic.edu")
+                    ));
                     break;
                 case 1:
-
                     startActivity(new Intent(
                             Intent.ACTION_VIEW,
                             Uri.parse("http://themagnificentmile.com")
@@ -75,16 +66,51 @@ public class MainActivity extends AppCompatActivity {
                     ));
                     break;
                 case 3:
+                    startActivity(new Intent(
+                            MainActivity.this,
+                            ChicagoBean.class
+                    ));
                     break;
                 case 4:
+                    startActivity(new Intent(
+                            MainActivity.this,
+                            WaterTowerChicago.class
+                    ));
                     break;
-
-
             }
-        }
-    });
+        }));
 
-
-
+//        switch(i){
+//            case 0:
+//                startActivity(new Intent(
+//                        Intent.ACTION_VIEW,
+//                        Uri.parse("http://artic.edu")
+//                ));
+//                break;
+//            case 1:
+//                startActivity(new Intent(
+//                        Intent.ACTION_VIEW,
+//                        Uri.parse("http://themagnificentmile.com")
+//                ));
+//                break;
+//            case 2:
+//                startActivity(new Intent(
+//                        MainActivity.this,
+//                        WillisTowerActivity.class
+//                ));
+//                break;
+//            case 3:
+//                startActivity(new Intent(
+//                        MainActivity.this,
+//                        ChicagoBeanActivity.class
+//                ));
+//                break;
+//            case 4:
+//                startActivity(new Intent(
+//                        MainActivity.this,
+//                        WaterTower.class
+//                ));
+//                break;
+//        }
     }
 }
